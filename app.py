@@ -1,16 +1,12 @@
-# compose_flask/app.py
-from flask import Flask
-from redis import Redis
+from users_api.app import create_app
+from users_api.config import Config
 
-app = Flask(__name__)
-redis = Redis(host='redis', port=6379)
-
+app = create_app(config_object=Config)
 
 @app.route('/')
 def hello():
-    redis.incr('hits')
-    return 'This Compose/Flask demo has been viewed %s time(s).' % redis.get('hits')
+    return 'Hello world'
 
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', debug=True)

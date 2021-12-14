@@ -1,12 +1,38 @@
 version: '1'
+
+volumes:
+    mysql_data:
+        driver: local
+
 services:
-    web:
+    users_api:
         build: .
+        env_file: .env.docker
         ports:
             - "5000:5000"
         volumes:
             - .:/app
         depends_on:
             - redis
+
     redis:
         image: redis
+
+    db:
+        image: mysql
+        command: sh -c "echo '
+            CREATE DATABASE IF NOT EXISTS users;
+            CREATE DATABASE IF NOT EXISTS users_test;
+            ' > /docker-entrypoint-initdb.d/init.sql;
+            /usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --sql_mode=
+            "
+        volumes:
+            - mysql_data:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: 'very_secure_password'
+        expose:
+            - "3306"
+        ports:
+            - "32769:3306"
+        depends_on:
+            - users_api
