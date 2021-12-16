@@ -1,8 +1,15 @@
 from flask import Blueprint
 
+from users_api.extensions import db
+from users_api.models.users import User, UserRoles
+from users_api.models.posts import Post
+
 blueprint = Blueprint('Users Routes', __name__, url_prefix='/users')
 
 
-@blueprint.route('/')
-def hello():
-    return 'Hello world'
+@blueprint.route('')
+def create_user():
+    user = User(email='test@test.com', username='tester', role=UserRoles.ADMIN)
+    db.session.add(user)
+    db.session.commit()
+    return 'Created a user!'

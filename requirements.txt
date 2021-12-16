@@ -3,3 +3,5 @@ redis
 Flask-SQLAlchemy
 flask-marshmallow
 marshmallow-sqlalchemy
+Flask-Migrate
+mysqlclient
