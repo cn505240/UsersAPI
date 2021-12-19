@@ -4,6 +4,7 @@ from users_api.app import create_app
 from users_api.config import TestConfig
 
 from users_api.extensions import db as _db
+from users_api.models.posts import Post
 from users_api.models.users import User, UserRoles
 
 
@@ -45,3 +46,12 @@ def user(db):
     db.session.commit()
 
     return user
+
+
+@pytest.fixture
+def post(db, user):
+    post = Post(user=user, text='Hello, world')
+    db.session.add(user)
+    db.session.commit()
+
+    return post

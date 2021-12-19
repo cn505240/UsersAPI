@@ -13,3 +13,5 @@ class User(db.Model):
     email = db.Column(db.String(254), unique=True, nullable=False)
     username = db.Column(db.String(30), unique=True, nullable=False)
     role = db.Column(db.String(30))
+
+    posts = db.relationship('Post', backref='user')

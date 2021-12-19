@@ -1,6 +1,7 @@
 from marshmallow import Schema, fields, validate
 
 from users_api.models.users import UserRoles
+from users_api.schemas.posts import PostSchema
 
 
 class UserSchema(Schema):
@@ -9,5 +10,6 @@ class UserSchema(Schema):
     username = fields.String()
     role = fields.String(validate=validate.OneOf(role.value for role in UserRoles))
 
+    posts = fields.Nested(PostSchema, many=True)
 
 user_schema = UserSchema()
