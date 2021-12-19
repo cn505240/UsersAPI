@@ -3,6 +3,8 @@ from http import HTTPStatus
 
 import responses
 
+from users_api.models.users import User
+
 
 @responses.activate
 def test_get_user(client, user, post):
@@ -24,6 +26,23 @@ def test_get_user(client, user, post):
 
 
 def test_get_user_not_found(client):
-    user_response = client.get(f'/users/1')
+    user_response = client.get('/users/1')
+
+    assert user_response.status_code == HTTPStatus.NOT_FOUND
+
+
+def test_delete_user(db, client, user):
+    user_response = client.delete(f'users/{user.id}')
+
+    assert user_response.status_code == HTTPStatus.NO_CONTENT
+
+    # verify that we removed the user from the DB
+    db_user = User.query.filter(User.id == user.id).first()
+    assert db_user is None
+
+
+
+def test_delete_user_not_found(client):
+    user_response = client.delete('/users/1')
 
     assert user_response.status_code == HTTPStatus.NOT_FOUND
