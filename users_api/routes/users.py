@@ -1,14 +1,17 @@
+from http import HTTPStatus
+
 from flask import Blueprint
 
-from users_api.extensions import db
-from users_api.models.users import User, UserRoles
+from users_api.models.users import User
+from users_api.schemas.users import user_schema
 
 blueprint = Blueprint('Users Routes', __name__, url_prefix='/users')
 
 
-@blueprint.route('')
-def create_user():
-    user = User(email='test@test.com', username='tester', role=UserRoles.ADMIN)
-    db.session.add(user)
-    db.session.commit()
-    return 'Created a user!'
+@blueprint.route(
+    rule='/<int:user_id>',
+    methods=['GET']
+)
+def get_user(user_id):
+    user = User.query.get_or_404(user_id)
+    return user_schema.dumps(user), HTTPStatus.OK

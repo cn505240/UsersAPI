@@ -19,6 +19,12 @@ def app():
     ctx.pop()
 
 
+@pytest.fixture
+def client(app):
+    client = app.test_client()
+    return client
+
+
 @pytest.fixture(autouse=True)
 def db(app):
     """A database for the tests."""
@@ -35,6 +41,7 @@ def db(app):
 @pytest.fixture
 def user(db):
     user = User(email='test@test.com', username='tester', role=UserRoles.ADMIN.value)
+    db.session.add(user)
     db.session.commit()
 
     return user
