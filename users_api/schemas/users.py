@@ -8,7 +8,7 @@ class UserSchema(Schema):
     id = fields.Integer()
     email = fields.Email()
     username = fields.String()
-    role = fields.String(validate=validate.OneOf(role.value for role in UserRoles))
+    role = fields.String(validate=validate.OneOf([role.value for role in UserRoles], error='Invalid user role.'))
 
     posts = fields.Nested(PostSchema, many=True)
 
