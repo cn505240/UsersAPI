@@ -1,12 +1,10 @@
 import json
 from http import HTTPStatus
 
-import responses
-
+from users_api.models.posts import Post
 from users_api.models.users import User
 
 
-@responses.activate
 def test_get_user(client, user, post):
     user_response = client.get(f'/users/{user.id}')
 
@@ -31,7 +29,7 @@ def test_get_user_not_found(client):
     assert user_response.status_code == HTTPStatus.NOT_FOUND
 
 
-def test_delete_user(db, client, user):
+def test_delete_user(db, client, user, post):
     user_response = client.delete(f'users/{user.id}')
 
     assert user_response.status_code == HTTPStatus.NO_CONTENT
@@ -39,6 +37,10 @@ def test_delete_user(db, client, user):
     # verify that we removed the user from the DB
     db_user = User.query.filter(User.id == user.id).first()
     assert db_user is None
+
+    # verify that we removed the user's posts from the DB too
+    db_post = Post.query.filter_by(user_id=user.id).first()
+    assert db_post is None
 
 
 

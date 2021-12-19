@@ -14,4 +14,4 @@ class User(db.Model):
     username = db.Column(db.String(30), unique=True, nullable=False)
     role = db.Column(db.String(30))
 
-    posts = db.relationship('Post', backref='user')
+    posts = db.relationship('Post', backref='user', cascade="all, delete")
