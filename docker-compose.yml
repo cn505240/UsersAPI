@@ -7,6 +7,7 @@ volumes:
 services:
     users_api:
         build: .
+        container_name: api
         env_file: .env.docker
         ports:
             - "5000:5000"

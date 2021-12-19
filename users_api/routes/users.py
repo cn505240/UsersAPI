@@ -2,7 +2,6 @@ from flask import Blueprint
 
 from users_api.extensions import db
 from users_api.models.users import User, UserRoles
-from users_api.models.posts import Post
 
 blueprint = Blueprint('Users Routes', __name__, url_prefix='/users')
 

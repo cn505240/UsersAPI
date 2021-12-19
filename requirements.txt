@@ -5,3 +5,4 @@ flask-marshmallow
 marshmallow-sqlalchemy
 Flask-Migrate
 mysqlclient
+pytest
