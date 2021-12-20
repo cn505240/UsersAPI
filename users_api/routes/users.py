@@ -1,12 +1,13 @@
 from http import HTTPStatus
 
 from flask import Blueprint, make_response, jsonify
+from sqlalchemy import update
 from sqlalchemy.exc import IntegrityError
 from webargs.flaskparser import use_args, parser, abort
 
 from users_api.extensions import db
 from users_api.models.users import User
-from users_api.schemas.users import user_schema
+from users_api.schemas.users import user_schema, user_role_schema
 
 blueprint = Blueprint('Users Routes', __name__, url_prefix='/users')
 
@@ -36,7 +37,7 @@ def delete_user(user_id):
     rule='',
     methods=['POST']
 )
-@use_args(user_schema, error_status_code=HTTPStatus.BAD_REQUEST)
+@use_args(user_schema)
 def create_user(user):
     try:
         new_user = User(**user)
@@ -46,6 +47,22 @@ def create_user(user):
         return 'A user with the same username or email already exists.', HTTPStatus.CONFLICT
 
     return user_schema.dumps(new_user), HTTPStatus.CREATED
+
+
+@blueprint.route(
+    rule='/<int:user_id>',
+    methods=['PATCH']
+)
+@use_args(user_role_schema)
+def update_user(update_args, user_id):
+    user = User.query.get_or_404(user_id)
+
+    for key in update_args:
+        setattr(user, key, update_args[key])
+    db.session.commit()
+
+    print(user)
+    return user_schema.dumps(user), HTTPStatus.OK
 
 
 @parser.error_handler

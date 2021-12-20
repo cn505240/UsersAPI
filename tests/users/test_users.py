@@ -12,7 +12,7 @@ def test_get_user(client, user, post):
 
     assert user_response.status_code == HTTPStatus.OK
 
-    user_payload = user_response.get_json()
+    user_payload = json.loads(user_response.data)
     assert user_payload['id'] == user.id
     assert user_payload['email'] == user.email
     assert user_payload['username'] == user.username
@@ -61,7 +61,7 @@ def test_create_user(db, client):
     assert create_user_response.status_code == HTTPStatus.CREATED
 
     # verify the created user is described in the response body
-    response_payload = create_user_response.get_json()
+    response_payload = json.loads(create_user_response.data)
     new_user_id = response_payload.get('id')
     assert new_user_id is not None
     assert response_payload['email'] == new_user['email']
@@ -127,7 +127,7 @@ def test_update_user(client, user):
     assert update_user_response.status_code == HTTPStatus.OK
 
     # check user data returned in response
-    response_user = update_user_response.get_json()
+    response_user = json.loads(update_user_response.data)
     assert response_user['email'] == user.email
     assert response_user['username'] == user.username
     assert response_user['role'] == user_update_payload['role']
@@ -157,4 +157,4 @@ def test_update_user_input_validation(client, user):
     res_json = update_user_response.get_json()
     assert res_json['description'] == 'Input failed validation.'
     errors = res_json['errors']['json']
-    assert errors['role'] == 'Invalid user role.'
+    assert 'Invalid user role.' in errors['role']
