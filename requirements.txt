@@ -7,3 +7,5 @@ Flask-Migrate
 mysqlclient
 pytest
 webargs
+gunicorn
+gevent

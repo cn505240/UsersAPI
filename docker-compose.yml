@@ -9,15 +9,18 @@ services:
         build: .
         container_name: api
         env_file: .env.docker
+        command: >
+            gunicorn -b 0.0.0.0:5000
+            -k gevent
+            -w 4
+            --chdir /app
+            --access-logfile -
+            --reload
+            app:app
         ports:
             - "5000:5000"
         volumes:
             - .:/app
-        depends_on:
-            - redis
-
-    redis:
-        image: redis
 
     db:
         image: mysql
