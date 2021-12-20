@@ -6,4 +6,4 @@ marshmallow-sqlalchemy
 Flask-Migrate
 mysqlclient
 pytest
-responses
+webargs

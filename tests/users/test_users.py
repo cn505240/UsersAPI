@@ -90,13 +90,13 @@ def test_create_user_validation_errors(field, value, error_message, client, user
         'role': 'admin',
         field: value,
     }
-
     create_user_response = client.post('/users', json=new_user)
 
     assert create_user_response.status_code == HTTPStatus.BAD_REQUEST
+
     res_json = json.loads(create_user_response.data)
     assert res_json['description'] == 'Input failed validation.'
-    errors = res_json['errors']
+    errors = res_json['errors']['json']
     assert error_message in errors[field]
 
 

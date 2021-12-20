@@ -51,7 +51,7 @@ def user(db):
 @pytest.fixture
 def post(db, user):
     post = Post(user=user, text='Hello, world')
-    db.session.add(user)
+    db.session.add(post)
     db.session.commit()
 
     return post
